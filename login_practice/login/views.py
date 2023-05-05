@@ -6,6 +6,7 @@ from django.core.exceptions import ValidationError
 from django.db.models       import Q                                                                                                                
 from .models                import User
 from django.views.decorators.csrf import csrf_exempt
+from .serializer import User_basic_serializer
 
 
 class LoginView(View):
@@ -42,20 +43,38 @@ class SignUpView(View):
         # 3.이때 비밀번호의 경우 따로 암호화를 해줘야하기 때문에 password_not_hashed에 따로 담아준다
         
         try :
+            if User.objects.filter(user_id = data['id']).exists() or\
+                User.objects.filter(email = data['email']).exists():
+                return JsonResponse({'message' : "ID ALREADY EXISTS"},status =400) 
+
             User( 
                 user_id     = data['id'],
                 email    = data['email'],
                 password = data['pw']
             ).save()
+            
 
             #7.성공적으로 저장이 되었으면 성공 메시지를 보낸다.  
             return JsonResponse({'message':'회원가입 성공'}, status=200)
 
         # 8.예외처리
-        except KeyError: 
+        except KeyError:
             return JsonResponse({'message' : "INVALID_KEYS"},status =400) 
 
-    # 9.테스트를 위한 get
+    # 9.조회 get id값으로 !get_all 보내면 전체 조회 특정 아이디 보내면 해당 아이디 정보 반환
     def get(self, request):
-        user_data = User.objects.values()
-        return JsonResponse({'users':list(user_data)}, status=200)   
+        data = json.loads(request.body)
+        if data['id'] == "!get_all":
+            user_data = User.objects.values()
+            return JsonResponse({'users':list(user_data)}, status=200)
+        
+        else:
+            request_id = data['id']
+            
+            if User.objects.filter(user_id = request_id).exists():
+                account = User.objects.get(user_id = request_id)
+                serializer = User_basic_serializer(account)
+                return JsonResponse(serializer.data, status= 200)
+            else:
+                return JsonResponse({'message' : "INVALID_KEYS"},status =400) 
+               

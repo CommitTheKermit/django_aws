@@ -21,7 +21,7 @@ class LoginView(View):
             id = User.objects.filter(user_id = request_id)
             if id.exists():
                 account = User.objects.get(user_id = request_id)
-                if account.password == request_password:
+                if account.user_pw == request_password:
                     return JsonResponse({'message' : 'SUCCESS'}, status=200)
                 else:
                     return JsonResponse({"message": "INVALID_PASSWORD"}, status=401)
@@ -42,7 +42,7 @@ class SignUpView(View):
 
         try :
             if User.objects.filter(user_id = data['user_id']).exists() or\
-                User.objects.filter(email = data['user_phone']).exists():
+                User.objects.filter(user_phone = data['user_phone']).exists():
                 return JsonResponse({'message' : "ID ALREADY EXISTS"},status =400) 
 
             User( 
@@ -75,5 +75,37 @@ class SignUpView(View):
                 serializer = User_basic_serializer(account)
                 return JsonResponse(serializer.data, status= 200)
             else:
-                return JsonResponse({'message' : "INVALID_KEYS"},status =400) 
+                return JsonResponse({'message' : "INVALID_KEYS"},status=400)
+            
+class FindIdView(View):
+
+    # 9.조회 get id값으로 !get_all 보내면 전체 조회 특정 아이디 보내면 해당 아이디 정보 반환
+    def get(self, request):
+        data = json.loads(request.body)
+
+        if User.objects.filter(user_phone = data['user_phone']).exists():
+            user_data = User.objects.get(user_phone = data['user_phone'])
+            return JsonResponse({'users':user_data}, status=200)
+        
+        else:
+            return JsonResponse({'message' : "INVALID_KEYS"},status=400) 
+        
+
+class FindPwView(View):
+    # 1.post방식으로 요청할 경우 회원가입한다.
+    def get(self, request):
+        # 2.data에 request에 담긴 정보를 넣어준다
+        data = json.loads(request.body)
+
+        try :
+            if User.objects.filter(user_id = data['user_id']).exists():
+                user_data = User.objects.get(user_id = data['user_id'])
+                if user_data.user_phone == data['user_phone']:
+                   return JsonResponse({'user_pw':user_data.user_pw}, status=200)
+            else:
+                return JsonResponse({'message' : "ID NOT EXISTS"},status =400) 
+
+        # 8.예외처리
+        except KeyError:
+            return JsonResponse({'message' : "INVALID_KEYS"},status =400) 
                

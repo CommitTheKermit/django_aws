@@ -38,7 +38,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV="C:\Users\commitKermit\Desktop\vscode\djangos\login_practice"
+VIRTUAL_ENV="C:\Users\commitKermit\Desktop\github\django_aws\cafe_oasis"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"
@@ -55,9 +55,9 @@ fi
 
 if [ -z "${VIRTUAL_ENV_DISABLE_PROMPT:-}" ] ; then
     _OLD_VIRTUAL_PS1="${PS1:-}"
-    PS1="(login_practice) ${PS1:-}"
+    PS1="(cafe_oasis) ${PS1:-}"
     export PS1
-    VIRTUAL_ENV_PROMPT="(login_practice) "
+    VIRTUAL_ENV_PROMPT="(cafe_oasis) "
     export VIRTUAL_ENV_PROMPT
 fi
 

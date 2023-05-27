@@ -1,4 +1,4 @@
-#!C:\Users\commitKermit\Desktop\vscode\djangos\login_practice\Scripts\python.exe
+#!C:\Users\commitKermit\Desktop\github\django_aws\cafe_oasis\Scripts\python.exe
 # When the django-admin.py deprecation ends, remove this script.
 import warnings
 

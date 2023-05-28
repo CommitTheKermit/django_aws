@@ -25,7 +25,7 @@ class EmailCode(models.Model):
         db_table = 'email_code_Oasis'
 
 class CafeInfo(models.Model):
-    cafe_id = models.IntegerField(primary_key=True)
+    cafe_id = models.CharField(primary_key=True, unique=True, max_length=10)
     cafe_add_name = models.CharField(max_length=255)
     cafe_name = models.CharField(max_length=255)
     cafe_rating = models.CharField(max_length=10)

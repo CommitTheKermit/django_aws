@@ -163,6 +163,7 @@ class CafeInfoView(View):
 
                 except:
                     return JsonResponse({'message' : "RETURN ERROR"},status =400) 
-
+           else:
+            return JsonResponse({'message' : "NONE EXIST ERROR"},status =400) 
         except:
             return JsonResponse({'message' : "INVALID_KEYS"},status =400)

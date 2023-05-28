@@ -4,9 +4,9 @@ from django.http            import JsonResponse
 from django.views           import View          
 from django.core.exceptions import ValidationError
 from django.db.models       import Q                                                                                                                
-from .models                import User, EmailCode
+from .models                import User, EmailCode, CafeInfo
 from django.views.decorators.csrf import csrf_exempt
-from .serializer import User_basic_serializer
+from .serializer import User_basic_serializer, Cafe_info_serializer
 from .email_verification import email_validate
 import random
 
@@ -147,4 +147,22 @@ class EmailVerifyView(View):
                     return JsonResponse({'message' : "VERIFY ERROR"},status =400) 
 
         except:
-            return JsonResponse({'message' : "INVALID_KEYS"},status =400) 
+            return JsonResponse({'message' : "INVALID_KEYS"},status =400)
+        
+class CafeInfoView(View):
+    def post(self, request):
+        print(request)
+        data = json.loads(request.body)
+
+        try:
+           if CafeInfo.objects.filter(cafe_id = data['cafe_id']).exists():
+                cafe_info = CafeInfo.objects.get(cafe_id = data['cafe_id'])
+                try:
+                    serialzer = Cafe_info_serializer(cafe_info)
+                    return JsonResponse(serialzer.data, status=200)
+
+                except:
+                    return JsonResponse({'message' : "RETURN ERROR"},status =400) 
+
+        except:
+            return JsonResponse({'message' : "INVALID_KEYS"},status =400)

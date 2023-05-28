@@ -23,3 +23,22 @@ class EmailCode(models.Model):
 
     class Meta:
         db_table = 'email_code_Oasis'
+
+class CafeInfo(models.Model):
+    cafe_id = models.IntegerField()
+    cafe_add_name = models.CharField(max_length=255)
+    cafe_name = models.CharField(max_length=255)
+    cafe_rating = models.CharField(max_length=10)
+    visitor_reviews = models.CharField(max_length=10)
+    blog_reviews = models.CharField(max_length=10)
+    address = models.CharField(max_length=255)
+    latitude = models.CharField(max_length=20)
+    longitude = models.CharField(max_length=20)
+    cafe_buisiness_hour = models.TextField()
+    cafe_phone = models.CharField(max_length=20)
+    cafe_link = models.CharField(max_length=255)
+    cafe_desc = models.TextField()
+
+    class Meta:
+        db_table = 'cafe_info_Oasis'
+

@@ -155,8 +155,8 @@ class CafeInfoView(View):
         data = json.loads(request.body)
 
         try:
-           if CafeInfo.objects.filter(id = data['cafe_id']).exists():
-                cafe_info = CafeInfo.objects.get(id = data['cafe_id'])
+           if CafeInfo.objects.filter(cafe_id = data['cafe_id']).exists():
+                cafe_info = CafeInfo.objects.get(cafe_id = data['cafe_id'])
                 try:
                     serialzer = Cafe_info_serializer(cafe_info)
                     return JsonResponse(serialzer.data, status=200)

@@ -116,16 +116,25 @@ class EmailSendView(View):
         code = random.sample(range(10), 6)
         code = ''.join(map(str,code))
         try:
-            EmailCode(
-                user_email    = data['user_email'],
-                user_code     = code
-            ).save()
-            try:
-                email_validate(data['user_email'], code)
-                return JsonResponse({'message':"mail sent successfully"}, status=200)
-            except:
-                return JsonResponse({'message' : "MAIL ERROR"},status =400) 
-
+            existFlag = EmailCode.objects.filter(uesr_email = data['user_email']).exists()
+            if not existFlag:
+                EmailCode(
+                    user_email    = data['user_email'],
+                    user_code     = code
+                ).save()
+                try:
+                    email_validate(data['user_email'], code)
+                    return JsonResponse({'message':"mail sent successfully"}, status=200)
+                except:
+                    return JsonResponse({'message' : "MAIL ERROR"},status =400) 
+            elif existFlag:
+                email_code = EmailCode.objects.get(user_email = data["user_email"])
+                email_code.delete()
+                try:
+                    email_validate(data['user_email'], code)
+                    return JsonResponse({'message':"mail sent again"}, status=200)
+                except:
+                    return JsonResponse({'message' : "MAIL ERROR"},status =400) 
         except:
             return JsonResponse({'message' : "INVALID_KEYS"},status =400)
         

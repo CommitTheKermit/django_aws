@@ -122,6 +122,7 @@ class EmailSendView(View):
                     user_email    = data['user_email'],
                     user_code     = code
                 ).save()
+                
                 try:
                     email_validate(data['user_email'], code)
                     return JsonResponse({'message':"mail sent successfully"}, status=200)
@@ -130,6 +131,11 @@ class EmailSendView(View):
             elif existFlag:
                 email_code = EmailCode.objects.get(user_email = data["user_email"])
                 email_code.delete()
+
+                EmailCode(
+                    user_email    = data['user_email'],
+                    user_code     = code
+                ).save()
                 try:
                     email_validate(data['user_email'], code)
                     return JsonResponse({'message':"mail sent again"}, status=200)

@@ -12,7 +12,7 @@ class User(models.Model):
     user_type = models.SmallIntegerField(null=True)
     user_sex = models.SmallIntegerField(null=True)
     user_age = models.SmallIntegerField(null=True)
-    user_nickanme = models.CharField(max_length=20, default='none')
+    user_nickname = models.CharField(max_length=20, default='none')
     
     def __str__(self):
         return f'{self.user_id}, {self.user_email}'

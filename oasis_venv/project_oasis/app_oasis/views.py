@@ -116,8 +116,8 @@ class EmailSendView(View):
         code = random.sample(range(10), 6)
         code = ''.join(map(str,code))
         try:
-            
-            if not EmailCode.objects.filter(uesr_email = data['user_email']).exists():
+            existFlag = EmailCode.objects.filter(user_email = data['user_email']).exists()
+            if not existFlag:
                 EmailCode(
                     user_email    = data['user_email'],
                     user_code     = code
@@ -127,7 +127,7 @@ class EmailSendView(View):
                     return JsonResponse({'message':"mail sent successfully"}, status=200)
                 except:
                     return JsonResponse({'message' : "MAIL ERROR"},status =400) 
-            elif EmailCode.objects.filter(uesr_email = data['user_email']).exists():
+            elif existFlag:
                 email_code = EmailCode.objects.get(user_email = data["user_email"])
                 email_code.delete()
                 try:

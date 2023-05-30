@@ -4,7 +4,8 @@ from .models import User, CafeInfo
 class User_basic_serializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('user_id','user_email', 'user_name', 'user_type' )
+        fields = ('user_email', 'user_name', 'user_type', 'user_nickname',\
+                  'user_age', 'user_sex', 'user_age' )
 
 class Cafe_info_serializer(serializers.ModelSerializer):
     class Meta:

@@ -5,7 +5,7 @@ class User_basic_serializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('user_email', 'user_name', 'user_type', 'user_nickname',\
-                  'user_age', 'user_sex', 'user_age' )
+                  'user_age', 'user_sex')
 
 class Cafe_info_serializer(serializers.ModelSerializer):
     class Meta:

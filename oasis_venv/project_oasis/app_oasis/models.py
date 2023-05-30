@@ -9,9 +9,9 @@ class User(models.Model):
     user_name = models.CharField(max_length=255)
     user_phone = models.CharField(max_length=20)
     user_registration_date = models.DateField(auto_now=True)
-    user_type = models.SmallIntegerField()
-    user_sex = models.SmallIntegerField()
-    user_age = models.SmallIntegerField()
+    user_type = models.SmallIntegerField(null=True)
+    user_sex = models.SmallIntegerField(null=True)
+    user_age = models.SmallIntegerField(null=True)
     user_nickanme = models.CharField(max_length=20)
     
     def __str__(self):

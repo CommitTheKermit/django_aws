@@ -47,16 +47,16 @@ class SignUpView(View):
                 User.objects.filter(user_phone = data['user_phone']).exists():
                 return JsonResponse({'message' : "email or phone ALREADY EXISTS"},status =400) 
             
-            print("asd")
             User(
                 user_email    = data['user_email'],
                 user_pw    = data['user_pw'],
                 user_name = data['user_name'],
                 user_phone = data['user_phone'],
-                user_type = 1
-                
+                user_type = data['user_type'],
+                user_sex = data['user_sex'],
+                user_age = data['user_age'],
+                user_nickname = data['user_nickname']
             ).save()
-            print("qwe")
             #7.성공적으로 저장이 되었으면 성공 메시지를 보낸다.  
             return JsonResponse({'message':'회원가입 성공'}, status=200)
 

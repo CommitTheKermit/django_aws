@@ -10,6 +10,9 @@ class User(models.Model):
     user_phone = models.CharField(max_length=20)
     user_registration_date = models.DateField(auto_now=True)
     user_type = models.SmallIntegerField()
+    user_sex = models.SmallIntegerField()
+    user_age = models.SmallIntegerField()
+    user_nickanme = models.CharField(max_length=20)
     
     def __str__(self):
         return f'{self.user_id}, {self.user_email}'

@@ -1,5 +1,5 @@
 from django.urls import path
-from app_oasis.views import LoginView, SignUpView, FindEmailView, FindPwView, EmailSendView, EmailVerifyView, CafeInfoView
+from .views import LoginView, SignUpView, FindEmailView, FindPwView, EmailSendView, EmailVerifyView
 
 urlpatterns = [
     path('login', LoginView.as_view()),
@@ -9,5 +9,5 @@ urlpatterns = [
     path('findpw', FindPwView.as_view()),
     path('mailsend', EmailSendView.as_view()),
     path('mailverify',EmailVerifyView.as_view()),
-    path('cafeinfo', CafeInfoView.as_view())
+    #path('cafeinfo', CafeInfoView.as_view())
 ]

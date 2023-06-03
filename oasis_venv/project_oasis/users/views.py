@@ -4,9 +4,9 @@ from django.http            import JsonResponse
 from django.views           import View          
 from django.core.exceptions import ValidationError
 from django.db.models       import Q                                                                                                                
-from .models                import User, EmailCode#, CafeInfo
+from .models                import Customer, EmailCode#, CafeInfo
 from django.views.decorators.csrf import csrf_exempt
-from .serializer import User_basic_serializer#, Cafe_info_serializer
+from .serializer import Customer_basic_serializer#, Cafe_info_serializer
 from .email_verification import email_validate
 import random
 
@@ -20,11 +20,11 @@ class LoginView(View):
             request_email = data.get('user_email')
             request_password = data.get('user_pw')
 
-            id = User.objects.filter(user_email = request_email)
+            id = Customer.objects.filter(user_email = request_email)
             if id.exists():
-                account = User.objects.get(user_email = request_email)
-                if account.user_pw == request_password:
-                    serialzer = User_basic_serializer(account)
+                account = Customer.objects.get(user_email = request_email)
+                if account.password == request_password:
+                    serialzer = Customer_basic_serializer(account)
                     return JsonResponse(serialzer.data, status=200)
                 else:
                     return JsonResponse({"message": "INVALID_PASSWORD"}, status=401)
@@ -43,19 +43,19 @@ class SignUpView(View):
         data = json.loads(request.body)
         print(data)
         try :
-            if User.objects.filter(user_email = data['user_email']).exists() or\
-                User.objects.filter(user_phone = data['user_phone']).exists():
+            if Customer.objects.filter(user_email = data['user_email']).exists() or\
+                Customer.objects.filter(user_phone = data['user_phone']).exists():
                 return JsonResponse({'message' : "email or phone ALREADY EXISTS"},status =400) 
             
-            User(
-                user_email    = data['user_email'],
-                user_pw    = data['user_pw'],
-                user_name = data['user_name'],
-                user_phone = data['user_phone'],
+            Customer(
+                email    = data['email'],
+                password    = data['password'],
+                name = data['name'],
+                phone_no = data['phone_no'],
                 user_type = data['user_type'],
-                user_sex = data['user_sex'],
-                user_age = data['user_age'],
-                user_nickname = data['user_nickname']
+                sex = data['sex'],
+                age = data['age'],
+                nickname = data['nickname']
             ).save()
             #7.성공적으로 저장이 되었으면 성공 메시지를 보낸다.  
             return JsonResponse({'message':'회원가입 성공'}, status=200)
@@ -67,14 +67,14 @@ class SignUpView(View):
     # 9.조회 get id값으로 !get_all 보내면 전체 조회 특정 아이디 보내면 해당 아이디 정보 반환
     def get(self, request, bid):
         if bid == "!get_all":
-            user_data = User.objects.values()
+            user_data = Customer.objects.values()
             return JsonResponse({'users':list(user_data)}, status=200)
         
         else:
-            if User.objects.filter(user_email = bid).exists():
-                account = User.objects.get(user_email = bid)
+            if Customer.objects.filter(email = bid).exists():
+                account = Customer.objects.get(email = bid)
                 # serializer = User_basic_serializer(account)
-                return JsonResponse({"user_email" : account.user_email}, status= 200)
+                return JsonResponse({"user_email" : account.email}, status= 200)
             else:
                 return JsonResponse({'message' : "INVALID_KEYS"},status=400)
 
@@ -84,9 +84,9 @@ class FindEmailView(View):
     def post(self, request):
         data = json.loads(request.body)
 
-        if User.objects.filter(user_phone = data['user_phone']).exists():
-            user_data = User.objects.get(user_phone = data['user_phone'])
-            return JsonResponse({'user_email': user_data.user_email}, status=200)
+        if Customer.objects.filter(user_phone = data['phone_no']).exists():
+            user_data = Customer.objects.get(user_phone = data['phone_no'])
+            return JsonResponse({'user_email': user_data.email}, status=200)
         
         else:
             return JsonResponse({'message' : "INVALID_KEYS"},status=400) 
@@ -99,10 +99,10 @@ class FindPwView(View):
         data = json.loads(request.body)
 
         try :
-            if User.objects.filter(user_email = data['user_email']).exists():
-                user_data = User.objects.get(user_email = data['user_email'])
-                if user_data.user_phone == data['user_phone']:
-                   return JsonResponse({'user_pw':user_data.user_pw}, status=200)
+            if Customer.objects.filter(user_email = data['user_email']).exists():
+                user_data = Customer.objects.get(email = data['email'])
+                if user_data.phone_no == data['phone_no']:
+                   return JsonResponse({'user_pw':user_data.password}, status=200)
             else:
                 return JsonResponse({'message' : "ID NOT EXISTS"},status =400) 
 

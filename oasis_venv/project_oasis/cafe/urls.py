@@ -4,5 +4,6 @@ from . import views
 
 urlpatterns = [
     #path('recommended', .as_view()),
-    path('recommend', views.recommend_cafe)
+    path('recommend/keyword', views.recommend_cafes_base_keyword),
+    path('recommend/rating', views.recommend_cafes_base_rating),
 ]

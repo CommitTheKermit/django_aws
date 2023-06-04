@@ -17,8 +17,8 @@ class LoginView(View):
         data = json.loads(request.body)
 
         try:
-            request_email = data.get('user_email')
-            request_password = data.get('user_pw')
+            request_email = data.get('email')
+            request_password = data.get('password')
 
             id = Customer.objects.filter(email = request_email)
             if id.exists():
@@ -43,8 +43,8 @@ class SignUpView(View):
         data = json.loads(request.body)
         print(data)
         try :
-            if Customer.objects.filter(email = data['user_email']).exists() or\
-                Customer.objects.filter(phone_no = data['user_phone']).exists():
+            if Customer.objects.filter(email = data['email']).exists() or\
+                Customer.objects.filter(phone_no = data['phone_no']).exists():
                 return JsonResponse({'message' : "email or phone ALREADY EXISTS"},status =400) 
             
             Customer(
@@ -65,8 +65,9 @@ class SignUpView(View):
             return JsonResponse({'message' : "INVALID_KEYS"},status =400) 
 
     # 9.조회 get id값으로 !get_all 보내면 전체 조회 특정 아이디 보내면 해당 아이디 정보 반환
-    def get(self, request, bid):
-        if bid == "!get_all":
+    def get(self, request):
+        reqString = request
+        if  == "!get_all":
             user_data = Customer.objects.values()
             return JsonResponse({'users':list(user_data)}, status=200)
         
@@ -74,7 +75,7 @@ class SignUpView(View):
             if Customer.objects.filter(email = bid).exists():
                 account = Customer.objects.get(email = bid)
                 # serializer = User_basic_serializer(account)
-                return JsonResponse({"user_email" : account.email}, status= 200)
+                return JsonResponse({"email" : account.email}, status= 200)
             else:
                 return JsonResponse({'message' : "INVALID_KEYS"},status=400)
 
@@ -84,9 +85,9 @@ class FindEmailView(View):
     def post(self, request):
         data = json.loads(request.body)
 
-        if Customer.objects.filter(phone_no = data['user_phone']).exists():
+        if Customer.objects.filter(phone_no = data['phone_no']).exists():
             user_data = Customer.objects.get(phone_no = data['user_phone'])
-            return JsonResponse({'user_email': user_data.email}, status=200)
+            return JsonResponse({'email': user_data.email}, status=200)
         
         else:
             return JsonResponse({'message' : "INVALID_KEYS"},status=400) 
@@ -99,10 +100,10 @@ class FindPwView(View):
         data = json.loads(request.body)
 
         try :
-            if Customer.objects.filter(email = data['user_email']).exists():
-                user_data = Customer.objects.get(email = data['user_email'])
-                if user_data.phone_no == data['user_phone']:
-                   return JsonResponse({'user_pw':user_data.password}, status=200)
+            if Customer.objects.filter(email = data['email']).exists():
+                user_data = Customer.objects.get(email = data['email'])
+                if user_data.phone_no == data['phone_no']:
+                   return JsonResponse({'password':user_data.password}, status=200)
             else:
                 return JsonResponse({'message' : "ID NOT EXISTS"},status =400) 
 
@@ -116,28 +117,28 @@ class EmailSendView(View):
         code = random.sample(range(10), 6)
         code = ''.join(map(str,code))
         try:
-            existFlag = EmailCode.objects.filter(user_email = data['user_email']).exists()
+            existFlag = EmailCode.objects.filter(user_email = data['email']).exists()
             if not existFlag:
                 EmailCode(
-                    user_email    = data['user_email'],
+                    user_email    = data['email'],
                     user_code     = code
                 ).save()
                 
                 try:
-                    email_validate(data['user_email'], code)
+                    email_validate(data['email'], code)
                     return JsonResponse({'message':"mail sent successfully"}, status=200)
                 except:
                     return JsonResponse({'message' : "MAIL ERROR"},status =400) 
             elif existFlag:
-                email_code = EmailCode.objects.get(user_email = data["user_email"])
+                email_code = EmailCode.objects.get(user_email = data["email"])
                 email_code.delete()
 
                 EmailCode(
-                    user_email    = data['user_email'],
+                    user_email    = data['email'],
                     user_code     = code
                 ).save()
                 try:
-                    email_validate(data['user_email'], code)
+                    email_validate(data['email'], code)
                     return JsonResponse({'message':"mail sent again"}, status=200)
                 except:
                     return JsonResponse({'message' : "MAIL ERROR"},status =400) 
@@ -150,8 +151,8 @@ class EmailVerifyView(View):
         data = json.loads(request.body)
 
         try:
-           if EmailCode.objects.filter(user_email = data["user_email"]).exists():
-                email_code = EmailCode.objects.get(user_email = data["user_email"])
+           if EmailCode.objects.filter(user_email = data["email"]).exists():
+                email_code = EmailCode.objects.get(user_email = data["email"])
                 try:
                     if email_code.user_code == data["user_code"]:
                         email_code.delete()

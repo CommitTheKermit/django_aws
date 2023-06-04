@@ -50,7 +50,7 @@ class CafeKeywords(models.Model):
     dessert = models.IntegerField(choices=RATING_CHOICES)
     various_menu = models.IntegerField(choices=RATING_CHOICES)
     special_menu = models.IntegerField(choices=RATING_CHOICES)
-    pleasant_store = models.IntegerField(choices=RATING_CHOICES)
+    large_store = models.IntegerField(choices=RATING_CHOICES)
     background = models.IntegerField(choices=RATING_CHOICES)
     parking = models.IntegerField(choices=RATING_CHOICES)
     talking = models.IntegerField(choices=RATING_CHOICES)
@@ -58,7 +58,6 @@ class CafeKeywords(models.Model):
     trendy_store = models.IntegerField(choices=RATING_CHOICES)
     unique_store = models.IntegerField(choices=RATING_CHOICES)
     gift_packaging = models.IntegerField(choices=RATING_CHOICES)
-    activity = models.IntegerField(choices=RATING_CHOICES)
-
+    
     class Meta:
          db_table = 'CafeKeywords'

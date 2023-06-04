@@ -1,14 +1,16 @@
 from django.shortcuts import render
-import json, re, traceback
 from django.http            import JsonResponse  
 from django.views           import View          
 from django.core.exceptions import ValidationError
 from django.db.models       import Q                                                                                                                
-from .models                import Customer, EmailCode#, CafeInfo
 from django.views.decorators.csrf import csrf_exempt
+
+from .models                import Customer, EmailCode#, CafeInfo
 from .serializer import Customer_basic_serializer#, Cafe_info_serializer
 from .email_verification import email_validate
+
 import random
+import json, re, traceback
 
 #로그인
 class LoginView(View):
@@ -66,16 +68,16 @@ class SignUpView(View):
 
     # 9.조회 get id값으로 !get_all 보내면 전체 조회 특정 아이디 보내면 해당 아이디 정보 반환
     def get(self, request):
-        reqString = request
-        if  == "!get_all":
+        reqString = request.GET.get('email', None)
+        if reqString == "!get_all":
             user_data = Customer.objects.values()
             return JsonResponse({'users':list(user_data)}, status=200)
         
         else:
-            if Customer.objects.filter(email = bid).exists():
-                account = Customer.objects.get(email = bid)
+            if Customer.objects.filter(email = reqString).exists():
+                account = Customer.objects.get(email = reqString)
                 # serializer = User_basic_serializer(account)
-                return JsonResponse({"email" : account.email}, status= 200)
+                return JsonResponse({"email" : "exist"}, status= 200)
             else:
                 return JsonResponse({'message' : "INVALID_KEYS"},status=400)
 
@@ -147,7 +149,6 @@ class EmailSendView(View):
         
 class EmailVerifyView(View):
     def post(self, request):
-        print("shit")
         data = json.loads(request.body)
 
         try:
@@ -165,21 +166,46 @@ class EmailVerifyView(View):
         except:
             return JsonResponse({'message' : "INVALID_KEYS"},status =400)
         
-# class CafeInfoView(View):
-#     def post(self, request):
-#         print(request)
-#         data = json.loads(request.body)
+class EditProfileView(View):
+    def post(self, request):
+        data = json.loads(request.body)
 
-#         try:
-#            if CafeInfo.objects.filter(cafe_id = data['cafe_id']).exists():
-#                 cafe_info = CafeInfo.objects.get(cafe_id = data['cafe_id'])
-#                 try:
-#                     serialzer = Cafe_info_serializer(cafe_info)
-#                     return JsonResponse(serialzer.data, status=200)
+        try:
+            existFlag = Customer.objects.filter(email = data['email']).exists()
+            if existFlag:
+                customer = Customer.objects.get(email = data["email"])
+                customer.delete()
+            try:
+                Customer(
+                    email    = data['email'],
+                    password    = data['password'],
+                    name = data['name'],
+                    phone_no = data['phone_no'],
+                    user_type = data['user_type'],
+                    sex = data['sex'],
+                    age = data['age'],
+                    nickname = data['nickname']
+                ).save()
+                return JsonResponse({'message':"register success"}, status=200)
+            except:
+                return JsonResponse({'message' : "REGISTER ERROR"},status =400) 
+        except:
+            return JsonResponse({'message' : "INVALID_KEYS"},status =400)
+class CafeInfoView(View):
+    def post(self, request):
+        print(request)
+        data = json.loads(request.body)
 
-#                 except:
-#                     return JsonResponse({'message' : "RETURN ERROR"},status =400) 
-#            else:
-#             return JsonResponse({'message' : "NONE EXIST ERROR"},status =400) 
-#         except:
-#             return JsonResponse({'message' : "INVALID_KEYS"},status =400)
+        try:
+           if CafeInfo.objects.filter(cafe_id = data['cafe_id']).exists():
+                cafe_info = CafeInfo.objects.get(cafe_id = data['cafe_id'])
+                try:
+                    serialzer = Cafe_info_serializer(cafe_info)
+                    return JsonResponse(serialzer.data, status=200)
+
+                except:
+                    return JsonResponse({'message' : "RETURN ERROR"},status =400) 
+           else:
+            return JsonResponse({'message' : "NONE EXIST ERROR"},status =400) 
+        except:
+            return JsonResponse({'message' : "INVALID_KEYS"},status =400)

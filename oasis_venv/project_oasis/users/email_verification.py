@@ -3,7 +3,7 @@ from email.mime.text import MIMEText
 
 def email_validate(reciever_email, code):
     sender_email = "commitverify@gmail.com"
-    reciever_email = "qnf323@naver.com"
+    # reciever_email = "qnf323@naver.com"
     smtp = smtplib.SMTP('smtp.gmail.com', 587)
     smtp.starttls()  # TLS 사용시 필요
 

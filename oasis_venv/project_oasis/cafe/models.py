@@ -38,26 +38,27 @@ class Cafe(models.Model):
          db_table = 'Cafe'
 
 class CafeKeywords(models.Model):
+    RATING_CHOICES = [
+            (1, '1'),
+            (2, '2'),
+            (3, '3'),
+            (4, '4'),
+            (5, '5'),
+        ]
+
     cafe = models.OneToOneField(Cafe, on_delete=models.CASCADE, primary_key=True)
-    dessert = models.DecimalField(max_digits=12, decimal_places=10)
-    well_being = models.DecimalField(max_digits=12, decimal_places=10)
-    various_menu = models.DecimalField(max_digits=12, decimal_places=10)
-    special_menu = models.DecimalField(max_digits=12, decimal_places=10)
-    pleasant_store = models.DecimalField(max_digits=12, decimal_places=10)
-    clean_store = models.DecimalField(max_digits=12, decimal_places=10)
-    background = models.DecimalField(max_digits=12, decimal_places=10)
-    parking = models.DecimalField(max_digits=12, decimal_places=10)
-    comfort = models.DecimalField(max_digits=12, decimal_places=10)
-    calm_down = models.DecimalField(max_digits=12, decimal_places=10)
-    trendy_store = models.DecimalField(max_digits=12, decimal_places=10)
-    unique_store = models.DecimalField(max_digits=12, decimal_places=10)
-    price = models.DecimalField(max_digits=12, decimal_places=10)
-    gift_packaging = models.DecimalField(max_digits=12, decimal_places=10)
-    alcohol = models.DecimalField(max_digits=12, decimal_places=10)
-    baby = models.DecimalField(max_digits=12, decimal_places=10)
-    service = models.DecimalField(max_digits=12, decimal_places=10)
-    activity = models.DecimalField(max_digits=12, decimal_places=10)
-    label = models.IntegerField()
+    dessert = models.IntegerField(choices=RATING_CHOICES)
+    various_menu = models.IntegerField(choices=RATING_CHOICES)
+    special_menu = models.IntegerField(choices=RATING_CHOICES)
+    pleasant_store = models.IntegerField(choices=RATING_CHOICES)
+    background = models.IntegerField(choices=RATING_CHOICES)
+    parking = models.IntegerField(choices=RATING_CHOICES)
+    talking = models.IntegerField(choices=RATING_CHOICES)
+    concentration = models.IntegerField(choices=RATING_CHOICES)
+    trendy_store = models.IntegerField(choices=RATING_CHOICES)
+    unique_store = models.IntegerField(choices=RATING_CHOICES)
+    gift_packaging = models.IntegerField(choices=RATING_CHOICES)
+    activity = models.IntegerField(choices=RATING_CHOICES)
 
     class Meta:
          db_table = 'CafeKeywords'

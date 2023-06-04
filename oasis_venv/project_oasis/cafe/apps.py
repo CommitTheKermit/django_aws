@@ -1,7 +1,5 @@
 from django.apps import AppConfig
 import pandas as pd
-import numpy as np
-
 
 
 class RecommendCafeConfig(AppConfig):
@@ -13,9 +11,9 @@ class RecommendCafeConfig(AppConfig):
 
         # Load CSV file into memory here
         
-        self.cafe_df = pd.read_csv("./좌표 처리전_이상치 삭제.csv", encoding="utf-8")
-        self.cafe_value = pd.read_csv("./k-means 클러스터링 처리4.csv", encoding="utf-8")
-        self.cafe_without_value = pd.read_csv("./cafe_without_keywords.csv", encoding="utf-8")
+        self.cafe_df = pd.read_csv("/home/ubuntu/django_aws/oasis_venv/project_oasis/cafe/cafe_df.csv", encoding="utf-8")
+        self.cafe_value = pd.read_csv("/home/ubuntu/django_aws/oasis_venv/project_oasis/cafe/cafe_value.csv", encoding="utf-8")
+        self.cafe_without_value = pd.read_csv("/home/ubuntu/django_aws/oasis_venv/project_oasis/cafe/cafe_without_keywords.csv", encoding="utf-8")
         self.cafe_value_x = self.cafe_value.drop(columns=['cafe_id'])
 
         # # If you want to make it globally accessible, you can do the following:

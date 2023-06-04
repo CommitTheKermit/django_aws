@@ -20,9 +20,9 @@ class LoginView(View):
             request_email = data.get('user_email')
             request_password = data.get('user_pw')
 
-            id = Customer.objects.filter(user_email = request_email)
+            id = Customer.objects.filter(email = request_email)
             if id.exists():
-                account = Customer.objects.get(user_email = request_email)
+                account = Customer.objects.get(email = request_email)
                 if account.password == request_password:
                     serialzer = Customer_basic_serializer(account)
                     return JsonResponse(serialzer.data, status=200)
@@ -43,8 +43,8 @@ class SignUpView(View):
         data = json.loads(request.body)
         print(data)
         try :
-            if Customer.objects.filter(user_email = data['user_email']).exists() or\
-                Customer.objects.filter(user_phone = data['user_phone']).exists():
+            if Customer.objects.filter(email = data['user_email']).exists() or\
+                Customer.objects.filter(phone_no = data['user_phone']).exists():
                 return JsonResponse({'message' : "email or phone ALREADY EXISTS"},status =400) 
             
             Customer(
@@ -84,8 +84,8 @@ class FindEmailView(View):
     def post(self, request):
         data = json.loads(request.body)
 
-        if Customer.objects.filter(user_phone = data['phone_no']).exists():
-            user_data = Customer.objects.get(user_phone = data['phone_no'])
+        if Customer.objects.filter(phone_no = data['user_phone']).exists():
+            user_data = Customer.objects.get(phone_no = data['user_phone'])
             return JsonResponse({'user_email': user_data.email}, status=200)
         
         else:
@@ -99,9 +99,9 @@ class FindPwView(View):
         data = json.loads(request.body)
 
         try :
-            if Customer.objects.filter(user_email = data['user_email']).exists():
-                user_data = Customer.objects.get(email = data['email'])
-                if user_data.phone_no == data['phone_no']:
+            if Customer.objects.filter(email = data['user_email']).exists():
+                user_data = Customer.objects.get(email = data['user_email'])
+                if user_data.phone_no == data['user_phone']:
                    return JsonResponse({'user_pw':user_data.password}, status=200)
             else:
                 return JsonResponse({'message' : "ID NOT EXISTS"},status =400) 

@@ -57,10 +57,31 @@ class Customer(User):
     sex = models.CharField(max_length=6, choices=SEX_CHOICES)
 
     def __str__(self):
-        return f'{self.user_id}, {self.user_email}'
+        return f'{self.user_id}, {self.email}'
     
     class Meta:
         db_table = 'Customer'
+
+class UserKeywords(models.Model):
+    RATING_CHOICES = [(i, str(i)) for i in range(1, 4)]
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE, primary_key=True)
+    beverage = models.PositiveSmallIntegerField(choices=RATING_CHOICES)
+    dessert = models.PositiveSmallIntegerField(choices=RATING_CHOICES)
+    various_menu = models.PositiveSmallIntegerField(choices=RATING_CHOICES)
+    special_menu = models.PositiveSmallIntegerField(choices=RATING_CHOICES)
+    large_store = models.PositiveSmallIntegerField(choices=RATING_CHOICES)
+    background = models.PositiveSmallIntegerField(choices=RATING_CHOICES)
+    talking = models.PositiveSmallIntegerField(choices=RATING_CHOICES)
+    concentration = models.PositiveSmallIntegerField(choices=RATING_CHOICES)
+    trendy_store = models.PositiveSmallIntegerField(choices=RATING_CHOICES)
+
+    gift_packaging = models.BooleanField(default=False)
+    parking = models.BooleanField(default=False)
+    price = models.BooleanField(default=False)
+
+    class Meta:
+        db_table = 'UserKeywords'
 
 
 class EmailCode(models.Model):

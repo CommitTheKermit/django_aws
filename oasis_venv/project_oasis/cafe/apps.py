@@ -1,5 +1,6 @@
 from django.apps import AppConfig
 import pandas as pd
+import pickle
 
 
 class RecommendCafeConfig(AppConfig):
@@ -15,6 +16,12 @@ class RecommendCafeConfig(AppConfig):
         self.cafe_value = pd.read_csv("/home/ubuntu/django_aws/oasis_venv/project_oasis/cafe/cafe_value.csv", encoding="utf-8")
         self.cafe_without_value = pd.read_csv("/home/ubuntu/django_aws/oasis_venv/project_oasis/cafe/cafe_without_keywords.csv", encoding="utf-8")
         self.cafe_value_x = self.cafe_value.drop(columns=['cafe_id'])
+
+    
+        with open('/home/ubuntu/django_aws/oasis_venv/project_oasis/cafe/model.pkl', 'rb') as f:
+            self.rfc_model = pickle.load(f)
+
+
 
         # # If you want to make it globally accessible, you can do the following:
         # global cafe_df, cafe_value, cafe_without_value

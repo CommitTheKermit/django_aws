@@ -1,5 +1,4 @@
 from django.db import models
-from users.models import User
 
 # Create your models here.
 # class Cafe(models.Model):
@@ -42,7 +41,7 @@ class Cafe(models.Model):
 class CafeKeywords(models.Model):
     LABEL_CHOICES = [(i, str(i)) for i in range(8)]
 
-    cafe = models.ForeignKey(Cafe, on_delete=models.CASCADE, primary_key=True)
+    cafe = models.ForeignKey(Cafe, on_delete=models.CASCADE, primary_key=True, db_column="cafe_id")
     beverage = models.FloatField()
     dessert = models.FloatField()
     various_menu = models.FloatField()
@@ -61,25 +60,3 @@ class CafeKeywords(models.Model):
     
     class Meta:
          db_table = 'CafeKeywords'
-
-class VisitHistory(models.Model):
-    #visit_id = models.AutoField(primary_key=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    cafe = models.ForeignKey(Cafe, on_delete=models.CASCADE)
-    total_spend = models.DecimalField(max_digits=10, decimal_places=0)
-    visit_date = models.DateTimeField()
-
-    class Meta:
-        db_table = 'VisitHistory'
-
-class CafeRating(models.Model):
-    RATING_CHOICES = [(i, str(i)) for i in range(1, 6)]
-
-    #rating_id = models.AutoField(primary_key=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    cafe = models.ForeignKey(Cafe, on_delete=models.CASCADE)
-    rating = models.PositiveSmallIntegerField(choices=RATING_CHOICES)
-    rating_date = models.DateTimeField()
-
-    class Meta:
-        db_table = 'CafeRating'

@@ -31,8 +31,8 @@ from django.db import models
 
 class User(models.Model):
     USER_TYPE_CHOICES = [
-        ('Customer', 'Customer'),
-        ('Employee', 'Employee'),
+        ('1', 'Customer'),
+        ('2', 'Employee'),
     ]
     
     user_id = models.AutoField(primary_key=True)
@@ -48,8 +48,8 @@ class User(models.Model):
 
 class Customer(User):
     SEX_CHOICES = [
-        ('Male', 'Male'),
-        ('Female', 'Female'),
+        ('1', 'Male'),
+        ('2', 'Female'),
     ]
 
     nickname = models.CharField(max_length=15)
@@ -65,7 +65,7 @@ class Customer(User):
 class UserKeywords(models.Model):
     RATING_CHOICES = [(i, str(i)) for i in range(1, 4)]
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE, primary_key=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, primary_key=True, db_column="user_id")
     beverage = models.PositiveSmallIntegerField(choices=RATING_CHOICES)
     dessert = models.PositiveSmallIntegerField(choices=RATING_CHOICES)
     various_menu = models.PositiveSmallIntegerField(choices=RATING_CHOICES)

@@ -78,7 +78,9 @@
 
 # recommend_cafe_df = recommend_cafe_base_keyworkd([0, 3, 1, 3, 1, 3, 1, 1, 3], [35.8680733, 128.5995891])
 # print(recommend_cafe_df)
-# # json_data = recommend_cafe_df.to_json(orient='records')
+# #
+
+#json_data = recommend_cafe_df.to_json(orient='records')
 # # json.loads(json_data)
 
 
@@ -86,6 +88,7 @@ import csv
 from django.db import transaction
 from cafe.models import Cafe, CafeKeywords
 
+#카페 csv 파일을 Cafe 테이블에 삽입
 def import_cafe_data(csv_filepathname):
     dataReader = csv.reader(open(csv_filepathname), delimiter=',', quotechar='"')
     next(dataReader, None)  # skip the headers
@@ -106,8 +109,7 @@ def import_cafe_data(csv_filepathname):
             cafe.longitude = float(row[12])
             cafe.save()
 
-import_cafe_data("/home/ubuntu/django_aws/oasis_venv/project_oasis/cafe/cafe_df.csv")
-
+#카페 값 csv 파이을 CafeKeywords 테이블에 삽입
 def import_cafe_value(csv_filepathname):
     dataReader = csv.reader(open(csv_filepathname), delimiter=',', quotechar='"')
     next(dataReader, None)  # skip the headers
@@ -143,4 +145,17 @@ def import_cafe_value(csv_filepathname):
             cafe_keywords.common_keywords = row[15]
             cafe_keywords.save()
 
+#카페 이미지 경로를 Cafe 테이블에 업데이트
+def import_cafe_img(csv_filepathname):
+    dataReader = csv.reader(open(csv_filepathname), delimiter=',', quotechar='"')
+    next(dataReader, None)  # skip the headers
+    with transaction.atomic():
+        for row in dataReader:
+            cafe = Cafe.objects.get(cafe_id=int(row[0]))
+            cafe.cafe_image = row[1]
+            cafe.save()
+    
+
 import_cafe_value("/home/ubuntu/django_aws/oasis_venv/project_oasis/cafe/cafe_value.csv")
+import_cafe_data("/home/ubuntu/django_aws/oasis_venv/project_oasis/cafe/cafe_df.csv")
+import_cafe_img("/home/ubuntu/django_aws/oasis_venv/project_oasis/cafe/merged_df.csv")
